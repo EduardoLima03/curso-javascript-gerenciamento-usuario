@@ -12,17 +12,28 @@ var fields = document.querySelectorAll("#form-user-create [name]");
 
 var user ={};
 
-fields.forEach(function(field, index){
-
-    if(field.name == "gender"){
-        user[field.name] = field.value;
-
-    }else{
-        user[field.name] = field.value;
-    }
-
-    //console.log(field.name);
-
-});
 
 console.log(user);
+
+//api de browser
+//SPA - Single Page Application, aplicação de pagina unica
+
+
+document.getElementById("form-user-create").addEventListener("submit", function(event){
+    
+    event.preventDefault();
+
+    fields.forEach(function(field, index){
+
+        if(field.name == "gender"){
+            user[field.name] = field.value;
+    
+        }else{
+            user[field.name] = field.value;
+        }
+    
+        //console.log(field.name);
+    
+    });
+
+});

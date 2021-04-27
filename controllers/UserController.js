@@ -13,6 +13,16 @@ class UserController{
     
             event.preventDefault();
             
+            let values = this.getValues();
+
+            values.photo = "";
+
+            this.getPhoto((context)=>{
+
+                values.photo = context;
+                this.addLine(values);
+            });
+
             //_this.getValues();
             //se usar o this normal vou referenciar a funçao dentro
             //de submit. não é o que quero. faz uma gabiarra para pode
@@ -21,8 +31,30 @@ class UserController{
             /** com o arrowfuction posso usa o this que vem de 
              * fora do corpo dessa função
              */
-            this.addLine(this.getValues());
+           // this.addLine(this.getValues());
         });
+    }//fechamento do onSubmit
+
+    getPhoto(callback){
+
+        let fileReader = new FileReader();
+
+        //um novo arry com os dados fiutrados
+        let elements = [...this.formEl.elements].filter(item =>{
+            if(item.name === 'photo'){
+                return item;
+            }
+        });
+
+        let file = elements[0].files[0];
+
+        fileReader.onload = ()=>{
+
+            callback(fileReader.result);
+        };
+
+        fileReader.readAsDataURL(file);
+
     }
 
     getValues(){
@@ -52,7 +84,7 @@ class UserController{
         this.tableEl.innerHTML = `
             <tr>
                 <td>
-                    <img src="dist/img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm">
+                    <img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm">
                 </td>
                 <td>${dataUser.name}</td>
                 <td>${dataUser.email}</td>

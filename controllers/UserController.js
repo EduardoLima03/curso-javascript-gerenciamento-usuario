@@ -15,14 +15,17 @@ class UserController{
             
             let values = this.getValues();
 
-            values.photo = "";
+            this.getPhoto().then(
+                (context)=>{
+                    values.photo = context;
+                    this.addLine(values);
+                },
+                (e)=>{
+                    console.log(e);
+                }
+            );
 
-            this.getPhoto((context)=>{
-
-                values.photo = context;
-                this.addLine(values);
-            });
-
+            
             //_this.getValues();
             //se usar o this normal vou referenciar a funçao dentro
             //de submit. não é o que quero. faz uma gabiarra para pode
@@ -35,25 +38,33 @@ class UserController{
         });
     }//fechamento do onSubmit
 
-    getPhoto(callback){
+    getPhoto(){
 
-        let fileReader = new FileReader();
+        return new Promise((resolve, reject)=>{
 
-        //um novo arry com os dados fiutrados
-        let elements = [...this.formEl.elements].filter(item =>{
-            if(item.name === 'photo'){
-                return item;
+            let fileReader = new FileReader();
+    
+            //um novo arry com os dados fiutrados
+            let elements = [...this.formEl.elements].filter(item =>{
+                if(item.name === 'photo'){
+                    return item;
+                }
+            });
+    
+            let file = elements[0].files[0];
+    
+            fileReader.onload = ()=>{
+    
+                resolve(fileReader.result);//ajax, asicrono procesamento
+            };
+
+            fileReader.onerror = (e)=>{
+                reject(e);
             }
+    
+            fileReader.readAsDataURL(file);
         });
 
-        let file = elements[0].files[0];
-
-        fileReader.onload = ()=>{
-
-            callback(fileReader.result);
-        };
-
-        fileReader.readAsDataURL(file);
 
     }
 
